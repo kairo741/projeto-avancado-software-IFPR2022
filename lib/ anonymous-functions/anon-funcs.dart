@@ -30,15 +30,11 @@ String _wasDisapproved(double finalGrade) {
 }
 
 String _verfifyApprovalByLargest(double grade1, double grade2) {
-  var largestGrade = grade1;
-  if (grade2 > grade1) largestGrade = grade2;
-  return _wasDisapproved(largestGrade);
+  return _wasDisapproved((grade2 > grade1) ? grade1 : grade2);
 }
 
 String _verfifyApprovalByTiniest(double grade1, double grade2) {
-  var tiniestGrade = grade1;
-  if (grade2 < grade1) tiniestGrade = grade2;
-  return _wasDisapproved(tiniestGrade);
+  return _wasDisapproved((grade2 < grade1) ? grade2 : grade1);
 }
 
 void show() {
