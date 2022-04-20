@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:aula01/functions-project/models/user.dart';
+import 'package:projeto_avancado_software_ifpr2022/functions-project/models/user.dart';
 
 import 'models/message.dart';
 

@@ -1,14 +1,15 @@
-import 'package:aula01/estrutura-decisao.dart' as estrutura_decisao;
-import 'package:aula01/functions-project/functions.dart' as functions;
-import 'package:aula01/functions-project/paramless-functions-without-return.dart'
+import 'package:projeto_avancado_software_ifpr2022/estrutura-decisao.dart' as estrutura_decisao;
+import 'package:projeto_avancado_software_ifpr2022/functions-project/functions.dart' as functions;
+import 'package:projeto_avancado_software_ifpr2022/functions-project/paramless-functions-without-return.dart'
     as paramless_functions_without_return;
-import 'package:aula01/functions-project/paramless-functions-with-return.dart'
+import 'package:projeto_avancado_software_ifpr2022/functions-project/paramless-functions-with-return.dart'
     as paramless_functions_with_return;
-import 'package:aula01/functions-project/params-functions-without-return.dart'
+import 'package:projeto_avancado_software_ifpr2022/functions-project/params-functions-without-return.dart'
     as params_functions_without_return;
-import 'package:aula01/functions-project/params-functions-with-return.dart'
+import 'package:projeto_avancado_software_ifpr2022/functions-project/params-functions-with-return.dart'
     as params_functions_with_return;
-import 'package:aula01/ anonymous-functions/anon-funcs.dart' as anon_funs;
+import 'package:projeto_avancado_software_ifpr2022/ anonymous-functions/anon-funcs.dart'
+    as anon_funs;
 
 void main(List<String> arguments) {
   // estrutura_decisao.faltas();
