@@ -1,0 +1,1 @@
+const double salarioMinimo = 1100.0;
