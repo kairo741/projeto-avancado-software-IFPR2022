@@ -9,7 +9,9 @@ import 'package:projeto_avancado_software_ifpr2022/functions-project/params-func
 import 'package:projeto_avancado_software_ifpr2022/functions-project/params-functions-with-return.dart'
     as params_functions_with_return;
 import 'package:projeto_avancado_software_ifpr2022/ anonymous-functions/anon-funcs.dart'
-    as anon_funs;
+    as anon_funcs;
+import 'package:projeto_avancado_software_ifpr2022/ anonymous-functions/salary-funcs.dart'
+    as salary_funcs;
 
 void main(List<String> arguments) {
   // estrutura_decisao.faltas();
@@ -31,5 +33,6 @@ void main(List<String> arguments) {
   // params_functions_without_return.discount(700, 200);
   // params_functions_with_return.show();
   // print(params_functions_with_return.returnApprovedString(5, 8));
-  anon_funs.show();
+  // anon_funcs.show();
+  salary_funcs.show();
 }
