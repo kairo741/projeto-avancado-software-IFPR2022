@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:projeto_avancado_software_ifpr2022/functions-project/models/user.dart';
+import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/message.dart';
+import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/user.dart';
 
-import 'models/message.dart';
+
 
 show() {
   print("Teste4");

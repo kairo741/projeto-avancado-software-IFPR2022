@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:projeto_avancado_software_ifpr2022/functions-project/models/user.dart';
+
+import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/user.dart';
 
 class Message {
   User user;
