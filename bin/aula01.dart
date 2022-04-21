@@ -31,5 +31,5 @@ void main(List<String> arguments) {
   // params_functions_without_return.discount(700, 200);
   // params_functions_with_return.show();
   // print(params_functions_with_return.returnApprovedString(5, 8));
-  print(anon_funs.verfifyCompleteApproval(1, 6, 2));
+  anon_funs.show();
 }

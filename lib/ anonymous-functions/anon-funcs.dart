@@ -2,7 +2,12 @@
 /// {op 2} Aprovação pela maior nota
 /// {op 3} Aprovação pela menor nota
 
-String verfifyCompleteApproval(int option, double grade1, double grade2) {
+//Qual a diferença do verfifyCompleteApprovalByOption para o verfifyCompleteApprovalByFunc?
+//R: O método verfifyCompleteApprovalByFunc, é mais maleavel e te permite acoplar funções para serem
+// executadas com os parametros enviados
+
+
+String verfifyCompleteApprovalByOption(int option, double grade1, double grade2) {
   var result = "";
   switch (option) {
     case 1: // Aprovação pela média
@@ -25,6 +30,11 @@ String verfifyCompleteApproval(int option, double grade1, double grade2) {
   return result;
 }
 
+String verfifyCompleteApprovalByFunc(double grade1, double grade2, Function function){
+  return function(grade1, grade2);
+}
+
+
 String _wasDisapproved(double finalGrade) {
   return finalGrade >= 6 ? "Aprovado" : "Reprovado";
 }
@@ -39,4 +49,5 @@ String _verfifyApprovalByTiniest(double grade1, double grade2) {
 
 void show() {
   print("lib/ anonymous-functions/anon-funcs.dart");
+  verfifyCompleteApprovalByFunc(6, 2, _verfifyApprovalByLargest);
 }
