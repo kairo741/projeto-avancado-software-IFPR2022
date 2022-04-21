@@ -1,13 +1,10 @@
 import 'dart:io';
 
-import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/message.dart';
-import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/user.dart';
-
-
-
 show() {
   print("Teste4");
 }
+
+
 
 String returnApprovationString() {
   print("Nota 1:");
@@ -38,16 +35,3 @@ String returnApprovationString() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-Message createMessage() {
-  print("Quem é o você?");
-  var sender = User(name: stdin.readLineSync()!);
-
-  print("Quem ?");
-
-
-  print("Quem irá receber?");
-  var recipient = User(name: stdin.readLineSync()!);
-
-  return Message(user: sender, content: "content", type: MessageType.TEXT); // todo - alterar
-}
