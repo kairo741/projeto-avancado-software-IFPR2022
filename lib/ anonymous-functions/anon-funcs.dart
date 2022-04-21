@@ -6,7 +6,6 @@
 //R: O método verfifyCompleteApprovalByFunc, é mais maleavel e te permite acoplar funções para serem
 // executadas com os parametros enviados
 
-
 String verfifyCompleteApprovalByOption(int option, double grade1, double grade2) {
   var result = "";
   switch (option) {
@@ -26,14 +25,12 @@ String verfifyCompleteApprovalByOption(int option, double grade1, double grade2)
       print("Tipo inválido");
       break;
   }
-
   return result;
 }
 
-String verfifyCompleteApprovalByFunc(double grade1, double grade2, Function function){
+String verfifyCompleteApprovalByFunc(double grade1, double grade2, Function function) {
   return function(grade1, grade2);
 }
-
 
 String _wasDisapproved(double finalGrade) {
   return finalGrade >= 6 ? "Aprovado" : "Reprovado";
@@ -49,5 +46,12 @@ String _verfifyApprovalByTiniest(double grade1, double grade2) {
 
 void show() {
   print("lib/ anonymous-functions/anon-funcs.dart");
-  verfifyCompleteApprovalByFunc(6, 2, _verfifyApprovalByLargest);
+  // verfifyCompleteApprovalByFunc(6, 2, _verfifyApprovalByLargest);
+
+  /// Arrow/Anonymous Functions são geralmente utilizadas em escopos fechados do projeto
+  /// onde aquela função será utilizada somente uma vez
+  /// é bem comum ser vista em bibliotecas, onde o criador da biblioteca deixa
+  /// para o programador definir o que fazer
+  print(verfifyCompleteApprovalByFunc(
+      6, 2, (double grade1, double grade2) => _wasDisapproved((grade1 + grade2) / 2)));
 }
