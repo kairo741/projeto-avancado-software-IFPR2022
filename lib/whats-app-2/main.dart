@@ -21,6 +21,7 @@ const String menu = """
   3 ☄ Deletar contato
   4 ☄ Ação (como: tremer a tela, ligar e etc...)
   5 ☄ Outro
+  0 ☄ Sair
   """;
 
 List<User> contacts = [];
