@@ -36,7 +36,7 @@ chooseOption() {
         addContact();
         break;
       case "3":
-        wpp2Action(deleteContact);
+        wpp2Action((contact) => contacts.remove(contact));
         break;
       default:
         print("Saindo...");
@@ -77,10 +77,6 @@ Message createMessage(User recipient) {
   print("Qual a mensagem?");
   var content = stdin.readLineSync()!;
   return Message(sender: sender, recipient: recipient, content: content, type: MessageType.TEXT);
-}
-
-deleteContact(User contact) {
-  contacts.remove(contact);
 }
 
 printMenus(List<String> menus) {
