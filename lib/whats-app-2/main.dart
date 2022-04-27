@@ -26,19 +26,25 @@ const String menu = """
 List<User> contacts = [];
 
 chooseOption() {
-  while (true) {
+  String option = "";
+  while (option != "0") {
     printMenus([logo, menu]);
-    switch (stdin.readLineSync()) {
+    option = stdin.readLineSync() ?? "0";
+    switch (option) {
       case "1":
-        wpp2Action(createMessage);
+        wpp2Action(createMessage, contacts);
         break;
       case "2":
         addContact();
         break;
       case "3":
-        wpp2Action((contact) => contacts.remove(contact));
+        wpp2Action((contact) => contacts.remove(contact), contacts);
+        break;
+      case "0":
+        print("Saindo...");
         break;
       default:
+        option = "0";
         print("Saindo...");
         break;
     }
@@ -46,9 +52,9 @@ chooseOption() {
 }
 
 // Função que recebe uma função sem definição, por parâmetro
-wpp2Action(Function function) {
-  if (contacts.isNotEmpty) {
-    function(chooseUser());
+wpp2Action(Function chosenOption, List<User> contactsList) {
+  if (contactsList.isNotEmpty) {
+    chosenOption(chooseUser());
   } else {
     print("Você não tem nenhum contato! Pressione ENTER para continuar...");
     stdin.readLineSync();
