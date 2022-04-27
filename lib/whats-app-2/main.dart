@@ -24,8 +24,12 @@ const String menu = """
   0 ☄ Sair
   """;
 
+/// Forma de "persistencia" dos dados em memória
 List<User> contacts = [];
 
+/// Função principal onde o usuário escolhe as opções
+/// do menu. São aplicados os conceitos de função anonima
+/// e a funções recebendo funções por parâmetro
 chooseOption() {
   String option = "";
   while (option != "0") {
@@ -52,7 +56,7 @@ chooseOption() {
   }
 }
 
-// Função que recebe uma função sem definição, por parâmetro
+/// Função que recebe uma função sem definição, por parâmetro
 wpp2Action(Function chosenOption, List<User> contactsList) {
   if (contactsList.isNotEmpty) {
     chosenOption(chooseUser());
