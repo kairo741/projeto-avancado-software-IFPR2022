@@ -17,28 +17,42 @@ const String menu = """
   Você pode:
   
   1 ☄ Enviar mensagem
-  2 ☄ Ação (como: tremer a tela, ligar e etc...)
-  3 ☄ Outro
+  2 ☄ Novo contato
+  3 ☄ Deletar contato
+  4 ☄ Ação (como: tremer a tela, ligar e etc...)
+  5 ☄ Outro
   """;
 
+List<User> contacts = [];
+
 chooseOption() {
-  printMenus([logo, menu]);
-  switch (stdin.readLineSync()) {
-    case "1":
-      wpp2Messages(createMessage);
-      break;
-    case "2":
-      print("oi");
-      break;
-    default:
-      print("Saindo...");
-      break;
+  while (true) {
+    printMenus([logo, menu]);
+    switch (stdin.readLineSync()) {
+      case "1":
+        wpp2Action(createMessage);
+        break;
+      case "2":
+        addContact();
+        break;
+      case "3":
+        wpp2Action(deleteContact);
+        break;
+      default:
+        print("Saindo...");
+        break;
+    }
   }
 }
-// Função que recebe uma função sem definição, por parâmetro
-wpp2Messages(Function function) {
-  function();
 
+// Função que recebe uma função sem definição, por parâmetro
+wpp2Action(Function function) {
+  if (contacts.isNotEmpty) {
+    function(chooseUser());
+  } else {
+    print("Você não tem nenhum contato! Pressione ENTER para continuar...");
+    stdin.readLineSync();
+  }
 }
 
 User createUser(String question) {
@@ -46,20 +60,31 @@ User createUser(String question) {
   return User(name: stdin.readLineSync()!);
 }
 
-Message createMessage() {
+addContact() {
+  contacts.add(createUser("Nome do contato:"));
+}
+
+User chooseUser() {
+  contacts.asMap().forEach((index, contact) {
+    print("${index + 1} - ${contact.name}");
+  });
+  print("Qual contato?");
+  return contacts[int.parse(stdin.readLineSync()!) - 1];
+}
+
+Message createMessage(User recipient) {
   var sender = createUser("Quem é o você?");
+  print("Qual a mensagem?");
+  var content = stdin.readLineSync()!;
+  return Message(sender: sender, recipient: recipient, content: content, type: MessageType.TEXT);
+}
 
-  var recipient = createUser("Quem irá receber?");
-
-  return Message(
-      sender: sender,
-      recipient: recipient,
-      content: "content",
-      type: MessageType.TEXT);
+deleteContact(User contact) {
+  contacts.remove(contact);
 }
 
 printMenus(List<String> menus) {
-  menus.forEach((element) {
+  for (var element in menus) {
     print(element);
-  });
+  }
 }
