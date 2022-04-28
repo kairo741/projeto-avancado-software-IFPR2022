@@ -49,10 +49,17 @@ void main() {
 
   ///Exercício 6 - Conseguiu entender:
   ///  - O contexto em que é útil utilizar funções anônimas?
+  //    R: Em locais onde aquela lógica só será aplicada ali
   ///  - Os requisitos necessários para usar funções anônimas?
+  //    R: Contexto para ser executada, em um hospedeiro
   ///  - diferença entre função nomeada e anônimas?
+  //    R: Funções anônimas não podem ser reutilizadas
   ///  - diferença entre anonymous function e arrow function?
+  //    R: Arrow functions só podem assumir uma única expressão por vez
+  //    assumindo o valor daquela expressão como resultado/retorno.
+  //    Já as anonymous functions podem receber blocos de código.
   ///  Em que caso devemos utilizar Arrow Function? O que devemos considerar?
+  //    R: onde é necessário somente uma expressão para gerar o valor requerido
 }
 
 void adicionarSalario(double salario, double valor, Function(double valor) validacao) {
