@@ -14,8 +14,10 @@ import 'package:projeto_avancado_software_ifpr2022/ anonymous-functions/salary-f
     as salary_funcs;
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/main.dart'
     as wpp2;
-import 'package:projeto_avancado_software_ifpr2022/class-27-04-22/main.dart'
+import 'package:projeto_avancado_software_ifpr2022/class-27-04-22/main_exerc_2.dart'
     as class270422;
+import 'package:projeto_avancado_software_ifpr2022/class-27-04-22/main_exerc_3.dart'
+    as class270422_3;
 
 void main(List<String> arguments) {
   // estrutura_decisao.faltas();
@@ -40,5 +42,6 @@ void main(List<String> arguments) {
   // anon_funcs.show();
   // salary_funcs.show();
   //   wpp2.chooseOption();
-    class270422.main();
+  //   class270422.main();
+    class270422_3.main();
 }
