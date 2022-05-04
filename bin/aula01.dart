@@ -18,6 +18,10 @@ import 'package:projeto_avancado_software_ifpr2022/class-27-04-22/main_exerc_2.d
     as class270422;
 import 'package:projeto_avancado_software_ifpr2022/class-27-04-22/main_exerc_3.dart'
     as class270422_3;
+import 'package:projeto_avancado_software_ifpr2022/class-04-05-22/a_depuracao.dart'
+    as class270422_4_a;
+import 'package:projeto_avancado_software_ifpr2022/class-04-05-22/b_exercicio.dart'
+    as class270422_4_b;
 
 void main(List<String> arguments) {
   // estrutura_decisao.faltas();
@@ -44,4 +48,6 @@ void main(List<String> arguments) {
   //   wpp2.chooseOption();
   //   class270422.main();
     class270422_3.main();
+    class270422_4_a.show();
+    class270422_4_b.show();
 }
