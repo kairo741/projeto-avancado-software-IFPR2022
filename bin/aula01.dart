@@ -12,10 +12,8 @@ import 'package:projeto_avancado_software_ifpr2022/ anonymous-functions/anon-fun
     as anon_funcs;
 import 'package:projeto_avancado_software_ifpr2022/ anonymous-functions/salary-funcs.dart'
     as salary_funcs;
-import 'package:projeto_avancado_software_ifpr2022/whats-app-2/main.dart'
-    as wpp2;
-import 'package:projeto_avancado_software_ifpr2022/class-27-04-22/main_exerc_2.dart'
-    as class270422;
+import 'package:projeto_avancado_software_ifpr2022/whats-app-2/main.dart' as wpp2;
+import 'package:projeto_avancado_software_ifpr2022/class-27-04-22/main_exerc_2.dart' as class270422;
 import 'package:projeto_avancado_software_ifpr2022/class-27-04-22/main_exerc_3.dart'
     as class270422_3;
 import 'package:projeto_avancado_software_ifpr2022/class-04-05-22/a_depuracao.dart'
@@ -47,7 +45,7 @@ void main(List<String> arguments) {
   // salary_funcs.show();
   //   wpp2.chooseOption();
   //   class270422.main();
-    class270422_3.main();
-    class270422_4_a.show();
-    class270422_4_b.show();
+  class270422_3.main();
+  class270422_4_a.show();
+  print(class270422_4_b.show());
 }
