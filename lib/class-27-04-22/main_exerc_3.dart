@@ -46,7 +46,7 @@ void main() {
         return (hourWage * 6) * workedDays;
       case WorkerRole.junior:
         var wageOfADay = (hourWage * 8);
-        if (workedDays > 6) {
+        if (workedDays >= 6) {
           var workedSats = workedDays / 6;
           var workingDays = workedDays - workedSats;
           return (wageOfADay * workingDays) + ((workedSats * wageOfADay) * 1.5);
@@ -55,7 +55,7 @@ void main() {
         }
       case WorkerRole.pleno:
         var wageOfADay = (hourWage * 8);
-        if (workedDays > 24) {
+        if (workedDays >= 24) {
           var workedMonths = workedDays / 24;
           var monthWage = 24 * wageOfADay;
           return (wageOfADay * workedDays) + ((monthWage * workedMonths) * 1.7);
@@ -63,7 +63,7 @@ void main() {
           return wageOfADay * workedDays;
         }
     }
-  }, hourWage: 5.5, workedDays: 22, role: WorkerRole.junior);
+  }, hourWage: 5.5, workedDays: 6, role: WorkerRole.junior);
 
   /// Exercício 02 - para cada função "hospedeira", defina uma função anônima.
 }
