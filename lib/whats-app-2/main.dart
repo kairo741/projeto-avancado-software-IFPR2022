@@ -12,6 +12,7 @@ const String logo = """Seja bem-vindo ao
 | |/ |/ / / / / /_/ / /_(__  ) ___ |/ /_/ / /_/ /   / __/ 
 |__/|__/_/ /_/\\__,_/\\__/____/_/  |_/ .___/ .___/   /____/ 
                                   /_/   /_/""";
+User me = User(name: "Kairo");
 
 const String menu = """
   Você pode:
@@ -56,7 +57,7 @@ chooseOption() {
   }
 }
 
-/// Função que recebe uma função sem definição, por parâmetro
+//region Função que recebe uma função sem definição, por parâmetro
 wpp2Action(Function chosenOption, List<User> contactsList) {
   if (contactsList.isNotEmpty) {
     chosenOption(chooseUser());
@@ -87,7 +88,7 @@ Message createMessage(User recipient) {
   var sender = createUser("Quem é o você?");
   print("Qual a mensagem?");
   var content = stdin.readLineSync()!;
-  return Message(sender: sender, recipient: recipient, content: content, type: MessageType.TEXT);
+  return Message(sender: sender, recipient: recipient, content: content);
 }
 
 printMenus(List<String> menus) {
@@ -95,3 +96,13 @@ printMenus(List<String> menus) {
     print(element);
   }
 }
+//endregion
+
+//region Funções com parâmetros nomeados e posicionais
+
+/// 9) Uma única função com parâmetros nomeados e posicionais;
+shakeScreen(User contact, {int seconds = 4, String side = "RIGHT"}) {
+  Message(content: "side:$side,seconds$seconds", recipient: contact, sender: me);
+}
+
+//endregion

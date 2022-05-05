@@ -12,7 +12,7 @@ class Message {
     required this.sender,
     required this.recipient,
     required this.content,
-    required this.type,
+    this.type = MessageType.TEXT,
   });
 }
 
