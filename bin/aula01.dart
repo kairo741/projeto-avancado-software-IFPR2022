@@ -20,6 +20,8 @@ import 'package:projeto_avancado_software_ifpr2022/class-04-05-22/a_depuracao.da
     as class270422_4_a;
 import 'package:projeto_avancado_software_ifpr2022/class-04-05-22/b_exercicio.dart'
     as class270422_4_b;
+import 'package:projeto_avancado_software_ifpr2022/class-07-05-22/main.dart'
+    as class070522;
 
 void main(List<String> arguments) {
   // estrutura_decisao.faltas();
@@ -43,9 +45,10 @@ void main(List<String> arguments) {
   // print(params_functions_with_return.returnApprovedString(5, 8));
   // anon_funcs.show();
   // salary_funcs.show();
-  //   wpp2.chooseOption();
+    wpp2.chooseOption();
   //   class270422.main();
-  class270422_3.main();
-  class270422_4_a.show();
-  print(class270422_4_b.show());
+  // class270422_3.main();
+  // class270422_4_a.show();
+  // print(class270422_4_b.show());
+  class070522.main();
 }
