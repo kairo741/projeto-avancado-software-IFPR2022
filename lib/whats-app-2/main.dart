@@ -60,7 +60,11 @@ chooseOption() {
 //region Função que recebe uma função sem definição, por parâmetro
 wpp2Action(Function chosenOption, List<User> contactsList) {
   if (contactsList.isNotEmpty) {
-    chosenOption(chooseUser());
+    try {
+      chosenOption(chooseUser());
+    } catch (e) {
+      printError("Algum erro ocorreu");
+    }
   } else {
     print("Você não tem nenhum contato! Pressione ENTER para continuar...");
     stdin.readLineSync();
@@ -81,14 +85,24 @@ User chooseUser() {
     print("${index + 1} - ${contact.name}");
   });
   print("Qual contato?");
-  return contacts[int.parse(stdin.readLineSync()!) - 1];
+  try {
+    return contacts[int.parse(stdin.readLineSync()!) - 1];
+  } catch (e) {
+    printError("Deve-se digitar somente números");
+    rethrow;
+  }
 }
 
 Message createMessage(User recipient) {
   var sender = createUser("Quem é o você?");
   print("Qual a mensagem?");
-  var content = stdin.readLineSync()!;
-  return Message(sender: sender, recipient: recipient, content: content);
+  try {
+    String content = stdin.readLineSync()!;
+    return Message(sender: sender, recipient: recipient, content: content);
+  } catch (e) {
+    printError("A mensagem não pode ser vazia");
+    rethrow;
+  }
 }
 
 printMenus(List<String> menus) {
@@ -106,3 +120,7 @@ shakeScreen(User contact, {int seconds = 4, String side = "RIGHT"}) {
 }
 
 //endregion
+
+printError(e) {
+  print('\x1B[31m$e\x1B[0m');
+}
