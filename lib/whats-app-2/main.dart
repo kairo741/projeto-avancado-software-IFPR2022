@@ -27,6 +27,7 @@ const String menu = """
 
 /// Forma de "persistência" dos dados em memória
 List<User> contacts = [];
+List<Message> messages = [];
 
 /// Função principal onde o usuário escolhe as opções
 /// do menu. São aplicados os conceitos de função anonima
@@ -101,11 +102,26 @@ Message createMessage(User recipient) {
   print("Qual a mensagem?");
   try {
     String content = stdin.readLineSync()!;
-    return Message(sender: sender, recipient: recipient, content: content);
+    return Message(
+        sender: sender, recipient: recipient, content: content, sendDate: DateTime.now());
   } catch (e) {
     printError("A mensagem não pode ser vazia");
     rethrow;
   }
+}
+
+sendMessage(Message message) {
+  validateUserMessage(message.sender);
+  messages.add(message);
+}
+
+List<Message> getUserMessagesBetweenDates(
+    {required User user, required DateTime initDate, required DateTime endDate}) {
+  return messages
+      .where((message) => (message.sender == user &&
+          message.sendDate.isAfter(initDate) &&
+          message.sendDate.isBefore(endDate)))
+      .toList();
 }
 
 printMenus(List<String> menus) {
@@ -119,7 +135,11 @@ printMenus(List<String> menus) {
 
 /// 9) Uma única função com parâmetros nomeados e posicionais;
 shakeScreen(User contact, {int seconds = 4, String side = "RIGHT"}) {
-  Message(content: "side:$side,seconds$seconds", recipient: contact, sender: me);
+  Message(
+      content: "side:$side,seconds$seconds",
+      recipient: contact,
+      sender: me,
+      sendDate: DateTime.now());
 }
 
 //endregion
@@ -158,6 +178,19 @@ validateAge(User user) {
   // todo - criar constante idade minima
   if (userAge < 13) {
     throw Exception("Para usar o App é necessário ser maior que 13 anos!");
+  }
+}
+
+/// Regra de negócio = Usuários que não sejam premium podem enviar somente 100 mensagens por hora
+validateUserMessage(User user) {
+  if (!user.isPremium) {
+    var currentDate = DateTime.now();
+    var userMessages = getUserMessagesBetweenDates(
+        user: user, endDate: currentDate, initDate: currentDate.subtract(Duration(hours: 1)));
+
+    if (userMessages.length > 100) {
+      throw Exception("Você excedeu o máximo de mensagens!");
+    }
   }
 }
 
