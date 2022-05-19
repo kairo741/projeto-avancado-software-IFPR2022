@@ -7,12 +7,14 @@ class Message {
   User recipient;
   String content;
   MessageType type;
+  DateTime sendDate;
 
   Message({
     required this.sender,
     required this.recipient,
     required this.content,
     this.type = MessageType.TEXT,
+    required this.sendDate,
   });
 }
 
