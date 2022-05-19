@@ -1,6 +1,7 @@
 import 'package:projeto_avancado_software_ifpr2022/class-18-05-22/aprovacao_nota.dart';
 import 'package:projeto_avancado_software_ifpr2022/class-27-04-22/main_exerc_2.dart';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/main.dart';
+import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/message.dart';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/user.dart';
 import 'package:test/test.dart';
 
@@ -34,6 +35,60 @@ main() {
 
     test("Idade superior a 120", () {
       expect(() => validateAge(User(name: "Teste", age: DateTime(205))), throwsException);
+    });
+  });
+
+  group('Teste do Wpp 2 - Validar número de mensagens do usuário', () {
+    test("Usuário não premium mandando somente 100 mensagens", () {
+      expect(() {
+        var message = Message(
+            sender: User(name: "Sender", age: DateTime(1975), isPremium: false),
+            recipient: User(name: "Sender", age: DateTime(1975)),
+            content: "Teste",
+            sendDate: DateTime.now());
+        for (var i = 0; i < 100; i++) {
+          sendMessage(message);
+        }
+      }, returnsNormally);
+    });
+
+    test("Usuário não premium mandando mais que 100 mensagens", () {
+      expect(() {
+        var message = Message(
+            sender: User(name: "Sender", age: DateTime(1975), isPremium: false),
+            recipient: User(name: "Sender", age: DateTime(1975)),
+            content: "Teste",
+            sendDate: DateTime.now());
+        for (var i = 0; i < 200; i++) {
+          sendMessage(message);
+        }
+      }, throwsException);
+    });
+
+    test("Usuário premium mandando menos que mensagens", () {
+      expect(() {
+        var message = Message(
+            sender: User(name: "Sender", age: DateTime(1975), isPremium: true),
+            recipient: User(name: "Sender", age: DateTime(1975)),
+            content: "Teste",
+            sendDate: DateTime.now());
+        for (var i = 0; i < 100; i++) {
+          sendMessage(message);
+        }
+      }, returnsNormally);
+    });
+
+    test("Usuário não premium mandando mais que 100 mensagens", () {
+      expect(() {
+        var message = Message(
+            sender: User(name: "Sender", age: DateTime(1975), isPremium: true),
+            recipient: User(name: "Sender", age: DateTime(1975)),
+            content: "Teste",
+            sendDate: DateTime.now());
+        for (var i = 0; i < 200; i++) {
+          sendMessage(message);
+        }
+      }, returnsNormally);
     });
   });
 }
