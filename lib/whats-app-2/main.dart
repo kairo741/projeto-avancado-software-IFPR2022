@@ -12,7 +12,7 @@ const String logo = """Seja bem-vindo ao
 | |/ |/ / / / / /_/ / /_(__  ) ___ |/ /_/ / /_/ /   / __/ 
 |__/|__/_/ /_/\\__,_/\\__/____/_/  |_/ .___/ .___/   /____/ 
                                   /_/   /_/""";
-User me = User(name: "Kairo");
+User me = User(name: "Kairo", age: DateTime.now());
 
 const String menu = """
   Você pode:
@@ -25,7 +25,7 @@ const String menu = """
   0 ☄ Sair
   """;
 
-/// Forma de "persistencia" dos dados em memória
+/// Forma de "persistência" dos dados em memória
 List<User> contacts = [];
 
 /// Função principal onde o usuário escolhe as opções
@@ -73,7 +73,10 @@ wpp2Action(Function chosenOption, List<User> contactsList) {
 
 User createUser(String question) {
   print(question);
-  return User(name: stdin.readLineSync()!);
+  // todo - perguntar a idade (receber outra questão por parâmetro)
+  var newUser = User(name: stdin.readLineSync()!, age: DateTime.now());
+  validateAge(newUser);
+  return newUser;
 }
 
 addContact() {
@@ -121,6 +124,41 @@ shakeScreen(User contact, {int seconds = 4, String side = "RIGHT"}) {
 
 //endregion
 
+// region Utils
+int calculateAge(DateTime userAge) {
+  DateTime currentDate = DateTime.now();
+  int age = currentDate.year - userAge.year;
+  int currentMonth = currentDate.month;
+  int userMonthBirt = userAge.month;
+  if (userMonthBirt > currentMonth) {
+    age--;
+  } else if (currentMonth == userMonthBirt) {
+    if (userAge.day > currentDate.day) {
+      age--;
+    }
+  }
+  return age;
+}
+
+//endregion
+
+//region Tratamento de erros
 printError(e) {
   print('\x1B[31m$e\x1B[0m');
 }
+
+/// Regra de negócio = Para usar o App o usuário não pode ser menor que 13 anos
+/// Para verificar o teto da idade válida a idade não pode ser maior que 120
+validateAge(User user) {
+  // todo - criar constante idade máxima
+  var userAge = calculateAge(user.age);
+  if (userAge.isNegative || userAge > 120) {
+    throw Exception("Valor de idade inválida");
+  }
+  // todo - criar constante idade minima
+  if (userAge < 13) {
+    throw Exception("Para usar o App é necessário ser maior que 13 anos!");
+  }
+}
+
+//endregion
