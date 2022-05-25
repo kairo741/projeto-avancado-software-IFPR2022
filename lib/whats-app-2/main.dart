@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/message.dart';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/user.dart';
 
+import 'shared/constants.dart';
+
 ///WhatsApp 2
 
 const String logo = """Seja bem-vindo ao
@@ -170,13 +172,11 @@ printError(e) {
 /// Regra de negócio = Para usar o App o usuário não pode ser menor que 13 anos
 /// Para verificar o teto da idade válida a idade não pode ser maior que 120
 validateAge(User user) {
-  // todo - criar constante idade máxima
   var userAge = calculateAge(user.age);
-  if (userAge.isNegative || userAge > 120) {
+  if (userAge.isNegative || userAge > userAgeMax) {
     throw Exception("Valor de idade inválida");
   }
-  // todo - criar constante idade minima
-  if (userAge < 13) {
+  if (userAge < userAgeMin) {
     throw Exception("Para usar o App é necessário ser maior que 13 anos!");
   }
 }
@@ -186,9 +186,11 @@ validateUserMessage(User user) {
   if (!user.isPremium) {
     var currentDate = DateTime.now();
     var userMessages = getUserMessagesBetweenDates(
-        user: user, endDate: currentDate, initDate: currentDate.subtract(Duration(hours: 1)));
+        user: user,
+        endDate: currentDate,
+        initDate: currentDate.subtract(Duration(hours: normalUserDefaultHourFilter)));
 
-    if (userMessages.length > 100) {
+    if (userMessages.length > normalUserMaxMessages) {
       throw Exception("Você excedeu o máximo de mensagens!");
     }
   }
