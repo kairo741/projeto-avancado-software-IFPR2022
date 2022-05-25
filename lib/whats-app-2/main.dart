@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/message.dart';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/user.dart';
 
+import 'models/chat.dart';
 import 'shared/constants.dart';
 
 ///WhatsApp 2
@@ -14,7 +15,7 @@ const String logo = """Seja bem-vindo ao
 | |/ |/ / / / / /_/ / /_(__  ) ___ |/ /_/ / /_/ /   / __/ 
 |__/|__/_/ /_/\\__,_/\\__/____/_/  |_/ .___/ .___/   /____/ 
                                   /_/   /_/""";
-User me = User(name: "Kairo", age: DateTime.now());
+User me = User(name: "Kairo", age: DateTime.now(), phone: "44 997040429");
 
 const String menu = """
   Você pode:
@@ -77,7 +78,8 @@ wpp2Action(Function chosenOption, List<User> contactsList) {
 User createUser(String question) {
   print(question);
   // todo - perguntar a idade (receber outra questão por parâmetro)
-  var newUser = User(name: stdin.readLineSync()!, age: DateTime.now());
+  // todo - perguntar telefone
+  var newUser = User(name: stdin.readLineSync()!, age: DateTime.now(), phone: "44 999999999");
   validateAge(newUser);
   return newUser;
 }
@@ -105,7 +107,14 @@ Message createMessage(User recipient) {
   try {
     String content = stdin.readLineSync()!;
     return Message(
-        sender: sender, recipient: recipient, content: content, sendDate: DateTime.now());
+        sender: sender,
+        chat: Chat(
+          nickname: recipient.name,
+          receivers: [recipient],
+          isGroup: false,
+        ),
+        content: content,
+        sendDate: DateTime.now());
   } catch (e) {
     printError("A mensagem não pode ser vazia");
     rethrow;
@@ -139,7 +148,11 @@ printMenus(List<String> menus) {
 shakeScreen(User contact, {int seconds = 4, String side = "RIGHT"}) {
   Message(
       content: "side:$side,seconds$seconds",
-      recipient: contact,
+      chat: Chat(
+        nickname: contact.name,
+        receivers: [contact],
+        isGroup: false,
+      ),
       sender: me,
       sendDate: DateTime.now());
 }

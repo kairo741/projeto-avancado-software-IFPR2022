@@ -2,16 +2,20 @@
 
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/user.dart';
 
+import 'chat.dart';
+
 class Message {
+  int? id;
   User sender;
-  User recipient;
+  Chat chat;
   String content;
   MessageType type;
   DateTime sendDate;
 
   Message({
+    this.id,
     required this.sender,
-    required this.recipient,
+    required this.chat,
     required this.content,
     this.type = MessageType.TEXT,
     required this.sendDate,
