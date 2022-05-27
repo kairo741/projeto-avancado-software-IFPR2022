@@ -23,13 +23,16 @@ const String menu = """
   1 ☄ Enviar mensagem
   2 ☄ Novo contato
   3 ☄ Deletar contato
-  4 ☄ Ação (como: tremer a tela, ligar e etc...)
-  5 ☄ Outro
+  4 ☄ Criar grupo
+  5 ☄ Bloquear contato/grupo
+  6 ☄ Ação (como: tremer a tela, ligar e etc...)
+  7 ☄ Outro
   0 ☄ Sair
   """;
 
 /// Forma de "persistência" dos dados em memória
 List<User> contacts = [];
+List<Chat> chats = [];
 List<Message> messages = [];
 
 /// Função principal onde o usuário escolhe as opções
@@ -37,6 +40,7 @@ List<Message> messages = [];
 /// e a funções recebendo funções por parâmetro
 chooseOption() {
   String option = "";
+  generateData();
   while (option != "0") {
     printMenus([logo, menu]);
     option = stdin.readLineSync() ?? "0";
@@ -50,6 +54,19 @@ chooseOption() {
       case "3":
         wpp2Action((contact) => contacts.remove(contact), contacts);
         break;
+      case "4":
+        wpp2Action((contact) {
+          List<User> contacts = [contact];
+          print("Escolha os outros contatos: ");
+          contacts.addAll(getListOfUser(chooseUser));
+          print("Nome do grupo: ");
+          createGroup(contacts, groupName: stdin.readLineSync()!);
+        }, contacts);
+        break;
+
+      case "5":
+        wpp2Action(blockContact, chats, isUser: false);
+        break;
       case "0":
         print("Saindo...");
         break;
@@ -62,10 +79,10 @@ chooseOption() {
 }
 
 //region Função que recebe uma função sem definição, por parâmetro
-wpp2Action(Function chosenOption, List<User> contactsList) {
+wpp2Action(Function chosenOption, List contactsList, {bool isUser = true}) {
   if (contactsList.isNotEmpty) {
     try {
-      chosenOption(chooseUser());
+      chosenOption(isUser ? chooseUser() : chooseChat());
     } catch (e) {
       printError("Algum erro ocorreu");
     }
@@ -95,6 +112,23 @@ User chooseUser() {
   print("Qual contato?");
   try {
     return contacts[int.parse(stdin.readLineSync()!) - 1];
+  } catch (e) {
+    printError("Deve-se digitar somente números");
+    rethrow;
+  }
+}
+
+Chat chooseChat() {
+  chats.asMap().forEach((index, chat) {
+    if (chat.isBlocked) {
+      print("${index + 1} - \x1B[31m${chat.nickname}\x1B[0m ");
+    } else {
+      print("${index + 1} - ${chat.nickname}");
+    }
+  });
+  print("Qual conversa?");
+  try {
+    return chats[int.parse(stdin.readLineSync()!) - 1];
   } catch (e) {
     printError("Deve-se digitar somente números");
     rethrow;
@@ -175,6 +209,24 @@ int calculateAge(DateTime userAge) {
   return age;
 }
 
+generateData() {
+  for (var i = 0; i < 10; i++) {
+    contacts.add(User(
+        id: contacts.length + 1,
+        name: "Contato ${i + 1}",
+        age: DateTime(2001),
+        isPremium: false,
+        phone: "44 999999999"));
+
+    chats.add(Chat(
+      id: chats.length + 1,
+      nickname: "Chat ${i + 1}",
+      receivers: [contacts[0]],
+      isGroup: false,
+    ));
+  }
+}
+
 //endregion
 
 //region Tratamento de erros
@@ -208,5 +260,75 @@ validateUserMessage(User user) {
     }
   }
 }
+
+validateBlock(Chat chat) {
+  if (chat.isBlocked) {
+    if (yesOrNo("Esse contato já está bloqueado, deseja desbloquear?")) {
+      var chatIndex = findChatIndexById(chat.id!);
+      chats[chatIndex].isBlocked = false;
+    }
+  }
+}
+
+//endregion
+
+//region block chat
+
+int findChatIndexById(int chatId) {
+  var index = chats.indexWhere((element) => element.id == chatId);
+  if (index == -1) {
+    throw Exception("Esse Chat não existe");
+  }
+  return index;
+}
+
+blockContact(Chat chat) {
+  try {
+    validateBlock(chat);
+    var chatIndex = findChatIndexById(chat.id!);
+    chats[chatIndex].isBlocked = true;
+  } catch (e) {
+    printError(e.toString());
+  }
+}
+
+//endregion
+
+//region criar grupo
+
+bool yesOrNo(String question) {
+  print("$question? (Y/N)");
+  return stdin.readLineSync()?.toUpperCase() == "Y";
+}
+
+List<User> getListOfUser(Function getUserByFilter) {
+  var contactsList = <User>[];
+  while (true) {
+    User contact = getUserByFilter();
+
+    var contactIndexInList = contactsList.indexWhere((element) => element == contact);
+    if (contactIndexInList != -1) {
+      contactsList.removeAt(contactIndexInList);
+    }
+
+    contactsList.add(contact);
+    if (yesOrNo("Deseja parar")) {
+      break;
+    }
+  }
+  return contactsList;
+}
+
+createGroup(List<User> contacts, {String groupName = "Novo Grupo"}) {
+  Chat group = Chat(id: chats.length + 1, nickname: groupName, receivers: contacts, isGroup: true);
+  chats.add(group);
+}
+
+// Transformada em função anônima
+// createGroupInterface() {
+//   List<User> contacts = getListOfUser(chooseUser);
+//   print("Nome do grupo: ");
+//   createGroup(contacts, groupName: stdin.readLineSync()!);
+// }
 
 //endregion
