@@ -170,14 +170,14 @@ sendMessage(Message message) {
   messagesTable.add(message);
 }
 
-List<Message> getUserMessagesBetweenDates({required User user,
-  required DateTime initDate,
-  required DateTime endDate}) {
+List<Message> getUserMessagesBetweenDates(
+    {required User user,
+    required DateTime initDate,
+    required DateTime endDate}) {
   return messagesTable
-      .where((message) =>
-  (message.sender == user &&
-      message.sendDate.isAfter(initDate) &&
-      message.sendDate.isBefore(endDate)))
+      .where((message) => (message.sender == user &&
+          message.sendDate.isAfter(initDate) &&
+          message.sendDate.isBefore(endDate)))
       .toList();
 }
 
@@ -232,11 +232,11 @@ generateData() {
         wallet: Wallet()));
 
     chatsTable.add(Chat(
-      id: chatsTable.length + 1,
-      nickname: "Chat ${i + 1}",
-      receivers: [contactsTable[0]],
-      isGroup: false,
-    ));
+        id: chatsTable.length + 1,
+        nickname: "Chat ${i + 1}",
+        receivers: [contactsTable[0]],
+        isGroup: false,
+        isBlocked: i % 2 == 0));
   }
 }
 
@@ -267,7 +267,7 @@ validateUserMessage(User user) {
         user: user,
         endDate: currentDate,
         initDate:
-        currentDate.subtract(Duration(hours: normalUserDefaultHourFilter)));
+            currentDate.subtract(Duration(hours: normalUserDefaultHourFilter)));
 
     if (userMessages.length > normalUserMaxMessages) {
       throw Exception("Você excedeu o máximo de mensagens!");
@@ -310,7 +310,7 @@ int findChatIndexById(int chatId) {
 
 blockContact(Chat chat) {
   try {
-    // validateBlockPrice(me,)
+    processBlockPrice(me, addToInvoice);
     validateBlock(chat);
     var chatIndex = findChatIndexById(chat.id!);
     chatsTable[chatIndex].isBlocked = true;
@@ -323,11 +323,13 @@ blockContact(Chat chat) {
 /// O usuário só pode bloquear 3 chats de graça
 /// a cada chat a ser bloqueado o valor do block sobe 3%
 /// caso seja um user premium o valor é fixo
-validateBlockPrice(User user, Function(double price) collectValue,
-    { int maxBlocks = 3, double blockTaxPercentage = 10,
-      double pricePerBlock = 30}) {
+processBlockPrice(User user, Function(double price, User user) processValue,
+    {int maxBlocks = 3,
+    double blockTaxPercentage = 10,
+    double pricePerBlock = 30}) {
+  // todo - talvez tornar um parametro a função que faz a busca
   List<Chat> blockedChats = filterChatsBy(isBlocked: true);
-  if (blockedChats.length > maxBlocks) {
+  if (true) {
     double totalPrice;
     int overBlocks = blockedChats.length - maxBlocks;
     if (user.isPremium) {
@@ -336,10 +338,25 @@ validateBlockPrice(User user, Function(double price) collectValue,
       totalPrice = overBlocks *
           (pricePerBlock + (pricePerBlock * blockTaxPercentage / 100));
     }
-    collectValue(totalPrice);
+    processValue(totalPrice, user);
   }
 }
 
+//endregion
+
+//region Wallet
+
+// função "tapa buraco" para tratar valores pra Wallet
+addToInvoice(double value, User user) {
+  me.wallet?.invoice += value;
+}
+
+processBalance(double value, User user) {
+  if (user.wallet!.balance < value) {
+    throw Exception("Saldo insuficiente");
+  }
+  user.wallet!.balance -= value;
+}
 
 //endregion
 
@@ -356,7 +373,7 @@ List<User> getListOfUser(Function getUserByFilter) {
     User contact = getUserByFilter();
 
     var contactIndexInList =
-    contactsList.indexWhere((element) => element == contact);
+        contactsList.indexWhere((element) => element == contact);
     if (contactIndexInList != -1) {
       contactsList.removeAt(contactIndexInList);
     }

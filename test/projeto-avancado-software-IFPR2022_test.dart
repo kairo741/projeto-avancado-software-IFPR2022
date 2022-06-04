@@ -4,6 +4,7 @@ import 'package:projeto_avancado_software_ifpr2022/whats-app-2/main.dart';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/chat.dart';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/message.dart';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/user.dart';
+import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/wallet.dart';
 import 'package:test/test.dart';
 
 main() {
@@ -114,6 +115,23 @@ main() {
           sendMessage(message);
         }
       }, returnsNormally);
+    });
+  });
+
+  group('Teste do Wpp 2 - Block', () {
+    test(
+        "Bloqueio de chats superior a quantidade gratis com saldo insuficiente",
+        () {
+      expect(() {
+        generateData();
+        var user = User(
+            name: "Teste",
+            age: DateTime(1975),
+            isPremium: true,
+            phone: "999999999999",
+            wallet: Wallet());
+        processBlockPrice(user, processBalance);
+      }, throwsException);
     });
   });
 }
