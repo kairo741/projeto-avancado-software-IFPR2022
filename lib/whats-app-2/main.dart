@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/message.dart';
 import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/user.dart';
+import 'package:projeto_avancado_software_ifpr2022/whats-app-2/models/wallet.dart';
 
 import 'models/chat.dart';
 import 'shared/constants.dart';
@@ -15,7 +16,12 @@ const String logo = """Seja bem-vindo ao
 | |/ |/ / / / / /_/ / /_(__  ) ___ |/ /_/ / /_/ /   / __/ 
 |__/|__/_/ /_/\\__,_/\\__/____/_/  |_/ .___/ .___/   /____/ 
                                   /_/   /_/""";
-User me = User(name: "Kairo", age: DateTime.now(), phone: "44 997040429");
+User me = User(
+    name: "Kairo",
+    age: DateTime.now(),
+    phone: "44 997040429",
+    isPremium: true,
+    wallet: Wallet());
 
 const String menu = """
   Você pode:
@@ -97,7 +103,10 @@ User createUser(String question) {
   // todo - perguntar a idade (receber outra questão por parâmetro)
   // todo - perguntar telefone
   var newUser = User(
-      name: stdin.readLineSync()!, age: DateTime.now(), phone: "44 999999999");
+      name: stdin.readLineSync()!,
+      age: DateTime.now(),
+      phone: "44 999999999",
+      wallet: Wallet());
   validateAge(newUser);
   return newUser;
 }
@@ -161,14 +170,14 @@ sendMessage(Message message) {
   messagesTable.add(message);
 }
 
-List<Message> getUserMessagesBetweenDates(
-    {required User user,
-    required DateTime initDate,
-    required DateTime endDate}) {
+List<Message> getUserMessagesBetweenDates({required User user,
+  required DateTime initDate,
+  required DateTime endDate}) {
   return messagesTable
-      .where((message) => (message.sender == user &&
-          message.sendDate.isAfter(initDate) &&
-          message.sendDate.isBefore(endDate)))
+      .where((message) =>
+  (message.sender == user &&
+      message.sendDate.isAfter(initDate) &&
+      message.sendDate.isBefore(endDate)))
       .toList();
 }
 
@@ -219,7 +228,8 @@ generateData() {
         name: "Contato ${i + 1}",
         age: DateTime(2001),
         isPremium: false,
-        phone: "44 999999999"));
+        phone: "44 999999999",
+        wallet: Wallet()));
 
     chatsTable.add(Chat(
       id: chatsTable.length + 1,
@@ -257,7 +267,7 @@ validateUserMessage(User user) {
         user: user,
         endDate: currentDate,
         initDate:
-            currentDate.subtract(Duration(hours: normalUserDefaultHourFilter)));
+        currentDate.subtract(Duration(hours: normalUserDefaultHourFilter)));
 
     if (userMessages.length > normalUserMaxMessages) {
       throw Exception("Você excedeu o máximo de mensagens!");
@@ -300,6 +310,7 @@ int findChatIndexById(int chatId) {
 
 blockContact(Chat chat) {
   try {
+    // validateBlockPrice(me,)
     validateBlock(chat);
     var chatIndex = findChatIndexById(chat.id!);
     chatsTable[chatIndex].isBlocked = true;
@@ -312,8 +323,9 @@ blockContact(Chat chat) {
 /// O usuário só pode bloquear 3 chats de graça
 /// a cada chat a ser bloqueado o valor do block sobe 3%
 /// caso seja um user premium o valor é fixo
-validateBlockPrice(User user, int maxBlocks, double blockTaxPercentage,
-    double pricePerBlock, Function(double price) collectValue) {
+validateBlockPrice(User user, Function(double price) collectValue,
+    { int maxBlocks = 3, double blockTaxPercentage = 10,
+      double pricePerBlock = 30}) {
   List<Chat> blockedChats = filterChatsBy(isBlocked: true);
   if (blockedChats.length > maxBlocks) {
     double totalPrice;
@@ -327,6 +339,7 @@ validateBlockPrice(User user, int maxBlocks, double blockTaxPercentage,
     collectValue(totalPrice);
   }
 }
+
 
 //endregion
 
@@ -343,7 +356,7 @@ List<User> getListOfUser(Function getUserByFilter) {
     User contact = getUserByFilter();
 
     var contactIndexInList =
-        contactsList.indexWhere((element) => element == contact);
+    contactsList.indexWhere((element) => element == contact);
     if (contactIndexInList != -1) {
       contactsList.removeAt(contactIndexInList);
     }
