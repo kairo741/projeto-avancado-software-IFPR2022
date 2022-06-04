@@ -31,9 +31,9 @@ const String menu = """
   """;
 
 /// Forma de "persistência" dos dados em memória
-List<User> contacts = [];
-List<Chat> chats = [];
-List<Message> messages = [];
+List<User> contactsTable = [];
+List<Chat> chatsTable = [];
+List<Message> messagesTable = [];
 
 /// Função principal onde o usuário escolhe as opções
 /// do menu. São aplicados os conceitos de função anonima
@@ -46,13 +46,13 @@ chooseOption() {
     option = stdin.readLineSync() ?? "0";
     switch (option) {
       case "1":
-        wpp2Action(createMessage, contacts);
+        wpp2Action(createMessage, contactsTable);
         break;
       case "2":
         addContact();
         break;
       case "3":
-        wpp2Action((contact) => contacts.remove(contact), contacts);
+        wpp2Action((contact) => contactsTable.remove(contact), contactsTable);
         break;
       case "4":
         wpp2Action((contact) {
@@ -61,11 +61,11 @@ chooseOption() {
           contacts.addAll(getListOfUser(chooseUser));
           print("Nome do grupo: ");
           createGroup(contacts, groupName: stdin.readLineSync()!);
-        }, contacts);
+        }, contactsTable);
         break;
 
       case "5":
-        wpp2Action(blockContact, chats, isUser: false);
+        wpp2Action(blockContact, chatsTable, isUser: false);
         break;
       case "0":
         print("Saindo...");
@@ -96,22 +96,23 @@ User createUser(String question) {
   print(question);
   // todo - perguntar a idade (receber outra questão por parâmetro)
   // todo - perguntar telefone
-  var newUser = User(name: stdin.readLineSync()!, age: DateTime.now(), phone: "44 999999999");
+  var newUser = User(
+      name: stdin.readLineSync()!, age: DateTime.now(), phone: "44 999999999");
   validateAge(newUser);
   return newUser;
 }
 
 addContact() {
-  contacts.add(createUser("Nome do contato:"));
+  contactsTable.add(createUser("Nome do contato:"));
 }
 
 User chooseUser() {
-  contacts.asMap().forEach((index, contact) {
+  contactsTable.asMap().forEach((index, contact) {
     print("${index + 1} - ${contact.name}");
   });
   print("Qual contato?");
   try {
-    return contacts[int.parse(stdin.readLineSync()!) - 1];
+    return contactsTable[int.parse(stdin.readLineSync()!) - 1];
   } catch (e) {
     printError("Deve-se digitar somente números");
     rethrow;
@@ -119,7 +120,7 @@ User chooseUser() {
 }
 
 Chat chooseChat() {
-  chats.asMap().forEach((index, chat) {
+  chatsTable.asMap().forEach((index, chat) {
     if (chat.isBlocked) {
       print("${index + 1} - \x1B[31m${chat.nickname}\x1B[0m ");
     } else {
@@ -128,7 +129,7 @@ Chat chooseChat() {
   });
   print("Qual conversa?");
   try {
-    return chats[int.parse(stdin.readLineSync()!) - 1];
+    return chatsTable[int.parse(stdin.readLineSync()!) - 1];
   } catch (e) {
     printError("Deve-se digitar somente números");
     rethrow;
@@ -157,12 +158,14 @@ Message createMessage(User recipient) {
 
 sendMessage(Message message) {
   validateUserMessage(message.sender);
-  messages.add(message);
+  messagesTable.add(message);
 }
 
 List<Message> getUserMessagesBetweenDates(
-    {required User user, required DateTime initDate, required DateTime endDate}) {
-  return messages
+    {required User user,
+    required DateTime initDate,
+    required DateTime endDate}) {
+  return messagesTable
       .where((message) => (message.sender == user &&
           message.sendDate.isAfter(initDate) &&
           message.sendDate.isBefore(endDate)))
@@ -211,17 +214,17 @@ int calculateAge(DateTime userAge) {
 
 generateData() {
   for (var i = 0; i < 10; i++) {
-    contacts.add(User(
-        id: contacts.length + 1,
+    contactsTable.add(User(
+        id: contactsTable.length + 1,
         name: "Contato ${i + 1}",
         age: DateTime(2001),
         isPremium: false,
         phone: "44 999999999"));
 
-    chats.add(Chat(
-      id: chats.length + 1,
+    chatsTable.add(Chat(
+      id: chatsTable.length + 1,
       nickname: "Chat ${i + 1}",
-      receivers: [contacts[0]],
+      receivers: [contactsTable[0]],
       isGroup: false,
     ));
   }
@@ -253,7 +256,8 @@ validateUserMessage(User user) {
     var userMessages = getUserMessagesBetweenDates(
         user: user,
         endDate: currentDate,
-        initDate: currentDate.subtract(Duration(hours: normalUserDefaultHourFilter)));
+        initDate:
+            currentDate.subtract(Duration(hours: normalUserDefaultHourFilter)));
 
     if (userMessages.length > normalUserMaxMessages) {
       throw Exception("Você excedeu o máximo de mensagens!");
@@ -265,7 +269,7 @@ validateBlock(Chat chat) {
   if (chat.isBlocked) {
     if (yesOrNo("Esse contato já está bloqueado, deseja desbloquear?")) {
       var chatIndex = findChatIndexById(chat.id!);
-      chats[chatIndex].isBlocked = false;
+      chatsTable[chatIndex].isBlocked = false;
     }
   }
 }
@@ -274,8 +278,20 @@ validateBlock(Chat chat) {
 
 //region block chat
 
+List<Chat> filterChatsBy({User? receiver, bool? isBlocked, bool? isGroup}) {
+  List<Chat> filteredChats = chatsTable;
+
+  if (isBlocked != null) {
+    filteredChats.retainWhere((Chat chat) => chat.isBlocked == isBlocked);
+  }
+  if (isGroup != null) {
+    filteredChats.retainWhere((Chat chat) => chat.isGroup == isGroup);
+  }
+  return filteredChats;
+}
+
 int findChatIndexById(int chatId) {
-  var index = chats.indexWhere((element) => element.id == chatId);
+  var index = chatsTable.indexWhere((element) => element.id == chatId);
   if (index == -1) {
     throw Exception("Esse Chat não existe");
   }
@@ -286,9 +302,29 @@ blockContact(Chat chat) {
   try {
     validateBlock(chat);
     var chatIndex = findChatIndexById(chat.id!);
-    chats[chatIndex].isBlocked = true;
+    chatsTable[chatIndex].isBlocked = true;
   } catch (e) {
     printError(e.toString());
+  }
+}
+
+/// Regra de negócio:
+/// O usuário só pode bloquear 3 chats de graça
+/// a cada chat a ser bloqueado o valor do block sobe 3%
+/// caso seja um user premium o valor é fixo
+validateBlockPrice(User user, int maxBlocks, double blockTaxPercentage,
+    double pricePerBlock, Function(double price) collectValue) {
+  List<Chat> blockedChats = filterChatsBy(isBlocked: true);
+  if (blockedChats.length > maxBlocks) {
+    double totalPrice;
+    int overBlocks = blockedChats.length - maxBlocks;
+    if (user.isPremium) {
+      totalPrice = overBlocks * pricePerBlock;
+    } else {
+      totalPrice = overBlocks *
+          (pricePerBlock + (pricePerBlock * blockTaxPercentage / 100));
+    }
+    collectValue(totalPrice);
   }
 }
 
@@ -306,7 +342,8 @@ List<User> getListOfUser(Function getUserByFilter) {
   while (true) {
     User contact = getUserByFilter();
 
-    var contactIndexInList = contactsList.indexWhere((element) => element == contact);
+    var contactIndexInList =
+        contactsList.indexWhere((element) => element == contact);
     if (contactIndexInList != -1) {
       contactsList.removeAt(contactIndexInList);
     }
@@ -320,8 +357,12 @@ List<User> getListOfUser(Function getUserByFilter) {
 }
 
 createGroup(List<User> contacts, {String groupName = "Novo Grupo"}) {
-  Chat group = Chat(id: chats.length + 1, nickname: groupName, receivers: contacts, isGroup: true);
-  chats.add(group);
+  Chat group = Chat(
+      id: chatsTable.length + 1,
+      nickname: groupName,
+      receivers: contacts,
+      isGroup: true);
+  chatsTable.add(group);
 }
 
 // Transformada em função anônima
